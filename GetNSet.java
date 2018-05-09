@@ -1,23 +1,50 @@
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 class GetNSet implements State {
-    private byte[] value;
+    private AtomicIntegerArray value;
     private byte maxval;
+    
+    GetNSet(byte[] v) 
+    { 
+        maxval = 127;
+        value = new AtomicIntegerArray(v.length);
 
-    GetNSet(byte[] v) { value = v; maxval = 127; }
+        for (int i=0;i<v.length;i++) { 
+            value.set (i,(int) v[i]);
+        }
 
-    GetNSet(byte[] v, byte m) { System.out.println("Created State"); value = v; maxval = m; }
+    }
 
-    public int size() { return value.length; }
+    GetNSet(byte[] v, byte m) 
+    { 
+        maxval = m; 
+        value = new AtomicIntegerArray(v.length);
 
-    public byte[] current() { return value; }
+        for (int i=0;i<v.length;i++) { 
+            value.set (i,(int) v[i]);
+            System.out.println(value.get(i));
+        }
+    }
+
+    public int size() { return value.length(); }
+
+    public byte[] current() { 
+
+        byte[] bytes = new byte[value.length()]; 
+
+        for(int i=0;i<value.length();i++) {
+            bytes[i] = (byte) value.get(i);
+        } 
+        return bytes; 
+    }
 
     public boolean swap(int i, int j) {
-	if (value[i] <= 0 || value[j] >= maxval) {
+	if (value.get(i) <= 0 || value.get(j) >= maxval) {
 	    return false;
 	}
-	value[i]--;
-	value[j]++;
+
+	value.getAndDecrement(i);
+	value.getAndIncrement(j);
 	return true;
     }
 }

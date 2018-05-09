@@ -4,7 +4,7 @@ class UnsynchronizedState implements State {
 
     UnsynchronizedState(byte[] v) { value = v; maxval = 127; }
 
-    UnsynchronizedState(byte[] v, byte m) { System.out.println("Created State"); value = v; maxval = m; }
+    UnsynchronizedState(byte[] v, byte m) { value = v; maxval = m; }
 
     public int size() { return value.length; }
 

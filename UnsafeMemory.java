@@ -17,6 +17,10 @@ class UnsafeMemory {
 		s = new SynchronizedState(stateArg, maxval);
 	    else if (args[0].equals("Unsynchronized"))
 		s = new UnsynchronizedState(stateArg, maxval);
+		else if (args[0].equals("GetNSet"))
+		s = new GetNSet(stateArg, maxval);
+		else if (args[0].equals("BetterSafe"))
+		s = new BetterSafe(stateArg, maxval);
 	    else
 		throw new Exception(args[0]);
 	    dowork(nThreads, nTransitions, s);
@@ -46,7 +50,6 @@ class UnsafeMemory {
       throws InterruptedException {
 	Thread[] t = new Thread[nThreads];
 	for (int i = 0; i < nThreads; i++) {
-		System.out.println("Created another thread");
 	    int threadTransitions =
 		(nTransitions / nThreads
 		 + (i < nTransitions % nThreads ? 1 : 0));
@@ -55,12 +58,10 @@ class UnsafeMemory {
 	long start = System.nanoTime();
 	for (int i = 0; i < nThreads; i++)
 	{
-		System.out.println("Starting Thread");
 	    t[i].start ();
 	}
 	for (int i = 0; i < nThreads; i++)
 	{
-		System.out.println("Ending Thread");
 	    t[i].join ();
 	}
 	long end = System.nanoTime();
